@@ -7,6 +7,6 @@ public class Ground : MonoBehaviour, IPointerClickHandler
 {
   public void OnPointerClick(PointerEventData eventData)
     {
-        GameManager.Instance.StartCombat();
+        GameManager.Instance.OnStartCombat();
     }
 }

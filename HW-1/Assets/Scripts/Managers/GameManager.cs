@@ -41,7 +41,7 @@ public class GameManager : MonoBehaviour
       EventManager.RunDieEvent();
     }
 
-    public void StartCombat() {
+    public void OnStartCombat() {
       // 리셋 -> 챔피언 배치 -> 전투 시작
       spawnManager.SpawnChampion();
     }
