@@ -7,10 +7,9 @@ public class Monster : MonoBehaviour
   private float hp = 50f;
 
   private void Start() {
-    EventManager.DieEvent += Die;
   }
 
-  void TakeDamage(float value) {
+  public void TakeDamage(float value) {
     this.hp -= value;
 
     if (hp <= 0) {
@@ -23,6 +22,6 @@ public class Monster : MonoBehaviour
   }
 
   private void OnDestroy() {
-    EventManager.DieEvent -= Die;
+    // EventManager.DieEvent -= Die;
   }
 }
