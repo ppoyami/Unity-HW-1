@@ -6,8 +6,9 @@ public class GameManager : MonoBehaviour
 {
     // Start is called before the first frame update
     private static GameManager _instance;
-
     public SpawnManager spawnManager;
+
+    bool inCombat = false;
 
     public static GameManager Instance {
       get {
@@ -35,14 +36,27 @@ public class GameManager : MonoBehaviour
     public void OnRelocate() {
       this.ResetObjects();
       spawnManager.RandomSpawnMonster();
+      inCombat = false;
     }
 
     void ResetObjects() {
-      EventManager.RunDieEvent();
+      GameObject[] champions = GameObject.FindGameObjectsWithTag("Champion");
+      GameObject[] monsters = GameObject.FindGameObjectsWithTag("Monster");
+
+      for (int i = 0; i < champions.Length; i++) {
+        champions[i].GetComponent<Champion>().Die();
+      }
+      for (int i = 0; i < monsters.Length; i++) {
+        monsters[i].GetComponent<Monster>().Die();
+      }
     }
 
     public void OnStartCombat() {
       // 리셋 -> 챔피언 배치 -> 전투 시작
-      spawnManager.SpawnChampion();
+      if (!inCombat) {
+        spawnManager.SpawnChampion();
+      }
+
+      inCombat = true;
     }
 }
