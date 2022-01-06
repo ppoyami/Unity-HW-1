@@ -14,4 +14,8 @@ public class Champion : MonoBehaviour
   public void Die() {
     Destroy(gameObject);
   }
+
+  private void OnDestroy() {
+    EventManager.DieEvent -= Die;
+  }
 }

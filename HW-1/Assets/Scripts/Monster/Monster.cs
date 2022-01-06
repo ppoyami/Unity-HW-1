@@ -21,4 +21,8 @@ public class Monster : MonoBehaviour
   public void Die() {
     Destroy(gameObject);
   }
+
+  private void OnDestroy() {
+    EventManager.DieEvent -= Die;
+  }
 }
