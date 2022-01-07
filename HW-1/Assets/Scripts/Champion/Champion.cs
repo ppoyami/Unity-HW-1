@@ -4,14 +4,16 @@ using UnityEngine;
 
 public class Champion : MonoBehaviour
 {
-  public float damage = 10f;
-  public float speed = 50f;
-  public float range = 1.0f;
+  public float damage = 0.1f;
+  public float speed = 10f;
+
+  bool inArea = false;
 
   private Monster nearestMonster = null;
 
   private void Start() {
   }
+  // TODO: 매 프레임마다 공격하는 것이 아니라, 일정한 속도로 공격하도록 하기
   void Update () {
 		ChaseMonster();
     Attack();
@@ -37,19 +39,19 @@ public class Champion : MonoBehaviour
     if (!this.nearestMonster) {
       FindClosestEnemy();
     } else {
-      transform.position = Vector2.MoveTowards(new Vector2(transform.position.x, transform.position.y), this.nearestMonster.transform.position, 3 * Time.deltaTime);
+      if (!this.inArea) {
+        Debug.Log("근처에 몬스터가 없어서 추적을 시작합니다!");
+        transform.position = Vector2.MoveTowards(new Vector2(transform.position.x, transform.position.y), this.nearestMonster.transform.position, 3 * Time.deltaTime);
+      }
     }
 
   }
 
 
   void Attack() {
-    if (this.nearestMonster) {
-      float distanceToEnemy = (this.nearestMonster.transform.position - this.transform.position).sqrMagnitude;
-      if (distanceToEnemy < range) {
-        // TODO: 몬스터에게 데미지 주기
-        this.nearestMonster.GetComponent<Monster>().TakeDamage(this.damage);
-      }
+    if (this.nearestMonster && this.inArea) {
+        Debug.Log("사정거리내에 들어온 몬스터를 공격합니다.");
+      this.nearestMonster.GetComponent<Monster>().TakeDamage(this.damage);
     }
   }
 
@@ -59,5 +61,15 @@ public class Champion : MonoBehaviour
 
   private void OnDestroy() {
     // EventManager.DieEvent -= Die;
+  }
+  // 몬스터가 사정거리내에 있을 때
+  private void OnTriggerEnter2D(Collider2D coll) {
+    Debug.Log("몬스터가 사정거리 내에 있습니다.");
+    inArea = true;
+  }
+  // 몬스터가 사정거리안에 없을 때
+  private void OnTriggerExit2D(Collider2D coll) {
+    Debug.Log("몬스터가 사정거리 내에 없습니다.");
+    inArea = false;
   }
 }
