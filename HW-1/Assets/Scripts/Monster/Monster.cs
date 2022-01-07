@@ -12,7 +12,7 @@ public class Monster : MonoBehaviour
 
   public void TakeDamage(float value) {
     this.hp -= value;
-
+    Debug.Log("몬스터가 데미지를 입습니다." + value);
     if (hp <= 0) {
       this.Die();
     }

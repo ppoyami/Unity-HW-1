@@ -47,7 +47,7 @@ public class GameManager : MonoBehaviour
 
       GameObject championObj = GameObject.FindGameObjectWithTag("Champion");
       Champion champion = championObj.GetComponent<Champion>();
-      champion.damage += 1.1f;
+      champion.damage *= 1.1f;
       this.gold -= 10;
       this.UpdateGoldText();
       Debug.Log("upgrade" + champion.damage);
@@ -58,7 +58,7 @@ public class GameManager : MonoBehaviour
       
       GameObject championObj = GameObject.FindGameObjectWithTag("Champion");
       Champion champion = championObj.GetComponent<Champion>();
-      champion.speed += 1.1f;
+      champion.speed *= 1.1f;
       this.gold -= 10;
       this.UpdateGoldText();
       Debug.Log("upgrade" + champion.speed);
