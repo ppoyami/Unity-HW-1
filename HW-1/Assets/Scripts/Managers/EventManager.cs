@@ -5,12 +5,12 @@ using UnityEngine;
 
 public class EventManager : MonoBehaviour
 {
-  public static event Action DieEvent;
+  public static event Action MonsterDieEvent;
 
-  public static void RunDieEvent(){
-      if (DieEvent != null)
+  public static void RunMonsterDieEvent(){
+      if (MonsterDieEvent != null)
       {
-          DieEvent();
+          MonsterDieEvent();
       }
   }
 }

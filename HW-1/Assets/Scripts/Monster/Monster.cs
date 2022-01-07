@@ -5,6 +5,7 @@ using UnityEngine;
 public class Monster : MonoBehaviour
 {
   private float hp = 50f;
+  public int gold = 10;
 
   private void Start() {
   }
@@ -13,12 +14,14 @@ public class Monster : MonoBehaviour
     this.hp -= value;
 
     if (hp <= 0) {
-      Destroy(gameObject);
+      this.Die();
     }
   }
 
   public void Die() {
     Destroy(gameObject);
+    GameManager.Instance.setGold(this.gold);
+    EventManager.RunMonsterDieEvent();
   }
 
   private void OnDestroy() {
