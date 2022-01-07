@@ -4,8 +4,9 @@ using UnityEngine;
 
 public class Champion : MonoBehaviour
 {
-  public float damage = 0.1f;
-  public float speed = 10f;
+  public float damage = 10.0f;
+  public float speed = 10.0f;
+  public float delay = 1.0f;
 
   bool inArea = false;
 
@@ -15,8 +16,7 @@ public class Champion : MonoBehaviour
   }
   // TODO: 매 프레임마다 공격하는 것이 아니라, 일정한 속도로 공격하도록 하기
   void Update () {
-		ChaseMonster();
-    Attack();
+		AI();
 	}
 
   // TODO: 몬스터가 죽을 때마다(이벤트) 업데이트되는 배열을 제공받으면 좋을 거 같음
@@ -35,23 +35,32 @@ public class Champion : MonoBehaviour
 	}
 
   // TODO: 추적함수는, 자신이 공격하는 몬스터가 null이 되었으면 호출하는 것이 좋을 거 같음
-  void ChaseMonster() {
+  void AI() {
     if (!this.nearestMonster) {
-      FindClosestEnemy();
+      StopCoroutine("Attack");
+      this.FindClosestEnemy();
     } else {
       if (!this.inArea) {
         Debug.Log("근처에 몬스터가 없어서 추적을 시작합니다!");
-        transform.position = Vector2.MoveTowards(new Vector2(transform.position.x, transform.position.y), this.nearestMonster.transform.position, 3 * Time.deltaTime);
+        StopCoroutine("Attack");
+        this.ChaseMonster();
+      } else {
+        StartCoroutine("Attack");
       }
     }
+  }
 
+  void ChaseMonster() {
+    transform.position = Vector2.MoveTowards(new Vector2(transform.position.x, transform.position.y), this.nearestMonster.transform.position, 3 * Time.deltaTime);
   }
 
 
-  void Attack() {
-    if (this.nearestMonster && this.inArea) {
-        Debug.Log("사정거리내에 들어온 몬스터를 공격합니다.");
+  IEnumerator Attack() {
+    while (true)
+    {
+      Debug.Log("사정거리내에 들어온 몬스터를 공격합니다.");
       this.nearestMonster.GetComponent<Monster>().TakeDamage(this.damage);
+      yield return new WaitForSeconds(this.delay);
     }
   }
 
