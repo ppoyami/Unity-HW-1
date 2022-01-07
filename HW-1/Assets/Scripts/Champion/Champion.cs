@@ -9,6 +9,7 @@ public class Champion : MonoBehaviour
   public float delay = 1.0f;
 
   bool inArea = false;
+  bool isAttack = false;
 
   private Monster nearestMonster = null;
 
@@ -22,6 +23,7 @@ public class Champion : MonoBehaviour
   // TODO: 몬스터가 죽을 때마다(이벤트) 업데이트되는 배열을 제공받으면 좋을 거 같음
 	void FindClosestEnemy()
 	{
+    isAttack = false;
 		float distanceToClosestEnemy = Mathf.Infinity;
 		Monster[] allEnemies = GameObject.FindObjectsOfType<Monster>();
 
@@ -36,26 +38,29 @@ public class Champion : MonoBehaviour
 
   // TODO: 추적함수는, 자신이 공격하는 몬스터가 null이 되었으면 호출하는 것이 좋을 거 같음
   void AI() {
-    if (!this.nearestMonster) {
+    if (!this.nearestMonster) { // 타겟팅 된 몬스터가 없을 때
       StopCoroutine("Attack");
       this.FindClosestEnemy();
-    } else {
-      if (!this.inArea) {
+    } 
+    else if (!this.inArea) { // 타켓팅 된 몬스터가 사거리 내에 없을 때
         Debug.Log("근처에 몬스터가 없어서 추적을 시작합니다!");
         StopCoroutine("Attack");
         this.ChaseMonster();
-      } else {
+    } 
+    else if(!this.isAttack) { // 사거리내에 있는 몬스터를 공격하지 않았을 때
         StartCoroutine("Attack");
-      }
     }
   }
+  
 
   void ChaseMonster() {
+    isAttack = false;
     transform.position = Vector2.MoveTowards(new Vector2(transform.position.x, transform.position.y), this.nearestMonster.transform.position, 3 * Time.deltaTime);
   }
 
 
   IEnumerator Attack() {
+    isAttack = true;
     while (true)
     {
       Debug.Log("사정거리내에 들어온 몬스터를 공격합니다.");
