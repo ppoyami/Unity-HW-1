@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4283122068937559189}
   - component: {fileID: 1606415765339819707}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: AttackArea
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -95,7 +95,7 @@ GameObject:
   - component: {fileID: 6018585689772861724}
   - component: {fileID: -568800520901935197}
   - component: {fileID: 8338099858834644436}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Champion
   m_TagString: Champion
   m_Icon: {fileID: 0}
@@ -178,7 +178,7 @@ CapsuleCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -218,5 +218,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damage: 10
-  speed: 10
-  delay: 1
+  speed: 2
+  delay: 2
