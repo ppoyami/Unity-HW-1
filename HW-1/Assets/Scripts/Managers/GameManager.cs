@@ -11,8 +11,15 @@ public class GameManager : MonoBehaviour
     public SpawnManager spawnManager;
     public Text GoldText;
 
+    public int championCount = 3;
+    public int monsterCount = 10;
+
     int gold = 0;
     bool inCombat = false;
+
+    enum Upgrade {
+      Damage, Speed
+    }
 
     public static GameManager Instance {
       get {
@@ -25,6 +32,7 @@ public class GameManager : MonoBehaviour
         return _instance;
       }
     }
+    
     private void Awake() {
       if (_instance == null)
         {
@@ -42,34 +50,58 @@ public class GameManager : MonoBehaviour
       this.UpdateGoldText();
     }
 
-    public void OnDamageUp() {
+    // * 업그레이드
+    void UpgradeChampions(Upgrade type) {
       if (this.gold < 10) return;
 
-      GameObject championObj = GameObject.FindGameObjectWithTag("Champion");
-      Champion champion = championObj.GetComponent<Champion>();
-      champion.damage *= 1.1f;
+      GameObject[] champions = GameObject.FindGameObjectsWithTag("Champion");
+      foreach (GameObject championObj in champions) {
+        Champion champion = championObj.GetComponent<Champion>();
+        switch (type)
+        {
+            case Upgrade.Damage:
+              champion.Damage *= 1.1f;
+              Debug.Log("upgrade" + champion.Damage);
+              break;
+            case Upgrade.Speed:
+              champion.Speed *= 1.1f;
+              Debug.Log("upgrade" + champion.Speed);
+              break;
+            default:
+              return;
+        }
+      }
       this.gold -= 10;
       this.UpdateGoldText();
-      Debug.Log("upgrade" + champion.damage);
+    }
+
+    public void OnDamageUp() {
+      UpgradeChampions(Upgrade.Damage);
     }
 
     public void OnSpeedUp() {
-      if (this.gold < 10) return;
-      
-      GameObject championObj = GameObject.FindGameObjectWithTag("Champion");
-      Champion champion = championObj.GetComponent<Champion>();
-      champion.speed *= 1.1f;
-      this.gold -= 10;
-      this.UpdateGoldText();
-      Debug.Log("upgrade" + champion.speed);
+      UpgradeChampions(Upgrade.Speed);
     }
 
+    // * 재배치
+    void ResetObjects() {
+      GameObject[] champions = GameObject.FindGameObjectsWithTag("Champion");
+      GameObject[] monsters = GameObject.FindGameObjectsWithTag("Monster");
+
+      for (int i = 0; i < champions.Length; i++) {
+        champions[i].GetComponent<Champion>().Die(true);
+      }
+      for (int i = 0; i < monsters.Length; i++) {
+        monsters[i].GetComponent<Monster>().Die(true);
+      }
+    }
     public void OnRelocate() {
       this.ResetObjects();
       spawnManager.RandomSpawnMonster();
       inCombat = false;
     }
-
+    
+    // * 골드 텍스트 UI
     public void setGold(int value) {
       this.gold += value;
     }
@@ -78,21 +110,8 @@ public class GameManager : MonoBehaviour
       GoldText.text = System.String.Format("Gold: {0:n0}", this.gold);
     }
 
-
-    void ResetObjects() {
-      GameObject[] champions = GameObject.FindGameObjectsWithTag("Champion");
-      GameObject[] monsters = GameObject.FindGameObjectsWithTag("Monster");
-
-      for (int i = 0; i < champions.Length; i++) {
-        champions[i].GetComponent<Champion>().Die();
-      }
-      for (int i = 0; i < monsters.Length; i++) {
-        monsters[i].GetComponent<Monster>().Die();
-      }
-    }
-
+    // * 전투시작 - 땅 클릭
     public void OnStartCombat() {
-      // 리셋 -> 챔피언 배치 -> 전투 시작
       if (!inCombat) {
         spawnManager.SpawnChampion();
       }
